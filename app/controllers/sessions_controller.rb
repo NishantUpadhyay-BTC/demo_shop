@@ -1,6 +1,6 @@
 class SessionsController < ApplicationController
   def new
-    puts '---------------------------------------------'
+    puts '------------------new---------------------------'
     puts params[:shop].present?
 
     authenticate if params[:shop].present?
@@ -43,6 +43,8 @@ class SessionsController < ApplicationController
   end
   
   def return_address
+    puts "#{session[:return_to]}@@@@@@2"
+    puts "#{root_url}@@@@@@2"
     session[:return_to] || root_url
   end
   
