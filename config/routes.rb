@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   get 'welcome' => 'home#welcome'
   get 'design' => 'home#design'
+
   controller :sessions do
     get 'login' => :new
     post 'login' => :create
@@ -8,6 +9,8 @@ Rails.application.routes.draw do
     delete 'logout' => :destroy
   end
   root :to => 'home#index'
+  get '/auth/shopify/callback', :to => 'sessions#create'
+  
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

@@ -6,11 +6,19 @@ class SessionsController < ApplicationController
     authenticate if params[:shop].present?
   end
 
-  def create
-    puts '!!!!!!!!!!!!!!!!!!!!!!!!'
-     
-     authenticate
+ def create
+  omniauth = request.env['omniauth.auth']
+  if omniauth && omniauth[:provider] && omniauth[:provider] == "shopify"
+    shop = Shop.find_or_create_by_url(params[:shop].gsub(/https?\:\/\//, ""))
+    shop.update_attribute(:token, omniauth['credentials'].token)
+    shopify_session = ShopifyAPI::Session.new(shop.url, shop.token)
+    session[:shop_id] = shop.to_param
+    redirect_to root_url
+  else
+    flash[:error] = "Something went wrong"
+    redirect_to root_url
   end
+end
   
   def show
     if response = request.env['omniauth.auth']
